@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { registerLicense } from '@syncfusion/ej2-base';
 
-registerLicense("ORg4AjUWIQA/Gnt2VlhhQlJCfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hSn9TdEBiXXpfcHBdRGBd");
+registerLicense("fake-license");
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
