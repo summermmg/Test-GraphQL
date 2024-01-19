@@ -5,24 +5,26 @@ import {
   ColumnsDirective,
   GridComponent,
 } from "@syncfusion/ej2-react-grids";
-import  { getMyDataList, searchDataByOrder } from '../queries';
+import { getMyDataList, searchDataByOrder } from "../queries";
+
+const SERVICE_URI = "http://localhost:4000/graphql";
 
 function Table() {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     new DataManager({
-      url: "http://localhost:4000/graphql",
+      url: SERVICE_URI,
       adaptor: new GraphQLAdaptor({
         response: {
-          result: "data",
+          result: "myDataList", // map the response
         },
         query: getMyDataList,
       }),
     })
       .executeQuery(new Query().take(15))
       .then((e) => {
-        setTableData(e?.actual?.data?.myDataList);
+        setTableData(e?.result);
       });
   }, []);
 
