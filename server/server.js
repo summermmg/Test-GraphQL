@@ -1,63 +1,55 @@
 var express = require("express");
 var { graphqlHTTP } = require("express-graphql");
-var {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLSchema,
-  GraphQLList,
-  GraphQLFloat,
-  GraphQLInt,
-} = require("graphql");
 const data = require("./data.json");
+var { buildSchema } = require("graphql");
 const cors = require("cors");
-// const _ = require('lodash');
 const app = express();
 
 // allow cross-origin requests
 app.use(cors());
 
-const MyDataType = new GraphQLObjectType({
-  name: "MyData",
-  fields: () => ({
-    areaId: { type: GraphQLString },
-    order: { type: GraphQLInt },
-    geoCode: { type: GraphQLString },
-    geoName: { type: GraphQLString },
-    count: { type: GraphQLFloat },
-    percentComp: { type: GraphQLFloat },
-    percentPen: { type: GraphQLFloat },
-    index: { type: GraphQLInt },
-  }),
-});
+// GraphQL Schema
+const schema = buildSchema(`
+      type Query {
+        myDataList(datamanager: Datamanager): [MyData]
+      }
+      type MyData {
+        areaId: String
+        order: Int
+        geoCode: String
+        count: Float
+        index: Int
+      }
 
-const RootQuery = new GraphQLObjectType({
-  name: "RootQueryType",
-  fields: {
-    myDataList: {
-      type: new GraphQLList(MyDataType),
-      resolve(parent, args) {
-        return data; // need to return an array
-      },
-    },
-    searchData: {
-      type: new GraphQLList(MyDataType),
-      args: { order: { type: GraphQLInt } },
-      resolve(parent, args) {
-        return data.filter((item) => item.order === args.order); // need to return an array
-      },
-    },
-  },
-});
+      input Datamanager {
+        sorted: [Sorted]
+        skip: Int
+        take: Int
+      }
 
-var schema = new GraphQLSchema({
-  query: RootQuery,
-});
+      input Sorted {
+        name: String
+        direction: String
+      }
+`);
+
+//Get data list by order
+function getDataList(args) {
+console.log(args.datamanager)
+return data
+}
+
+// Resolver
+const root = {
+  myDataList: getDataList,
+};
 
 // bind express with graphql
 app.use(
   "/graphql",
   graphqlHTTP({
     schema: schema,
+    rootValue: root,
     graphiql: true,
   })
 );

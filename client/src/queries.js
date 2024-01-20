@@ -1,13 +1,10 @@
-const getMyDataList = `{
-    myDataList {
-      areaId
-      order
-      geoCode
-      geoName
-      count
-      index
-    }
-  }`;
+const getMyDataList = `query getDataList($datamanager:Datamanager) {
+  myDataList(datamanager: $datamanager) {
+    order
+    geoCode
+    areaId
+  }
+}`;
 
 const searchDataByOrder = `{
     searchData(order: 2) {            

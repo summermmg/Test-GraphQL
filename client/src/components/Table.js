@@ -22,7 +22,7 @@ function Table() {
         query: getMyDataList,
       }),
     })
-      .executeQuery(new Query().take(15))
+      .executeQuery(new Query().sortBy('order', 'descending').page(3, 8))
       .then((e) => {
         setTableData(e?.result);
       });
