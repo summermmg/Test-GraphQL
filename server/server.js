@@ -34,9 +34,7 @@ const schema = buildSchema(`
 `);
 
 // Get data list
-function getDataList({datamanager}) {
-  console.log(datamanager);
-
+function getDataList({ datamanager }) {
   let result = [...data];
 
   if (datamanager.where) {
@@ -44,6 +42,12 @@ function getDataList({datamanager}) {
   }
 
   // perform paging
+  if (datamanager.skip !== undefined && datamanager.take !== undefined) {
+    result = result.slice(
+      datamanager.skip,
+      datamanager.skip + datamanager.take
+    );
+  }
 
   if (datamanager.sorted) {
     // perform sorting
@@ -54,7 +58,7 @@ function getDataList({datamanager}) {
       result.sort((a, b) => b[condition.name] - a[condition.name]);
     }
   }
-  
+
   return result;
 }
 
