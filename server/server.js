@@ -33,10 +33,29 @@ const schema = buildSchema(`
       }
 `);
 
-//Get data list by order
-function getDataList(args) {
-console.log(args.datamanager)
-return data
+// Get data list
+function getDataList({datamanager}) {
+  console.log(datamanager);
+
+  let result = [...data];
+
+  if (datamanager.where) {
+    // perform filtering
+  }
+
+  // perform paging
+
+  if (datamanager.sorted) {
+    // perform sorting
+    const condition = datamanager.sorted[0];
+    if (condition.direction === "ascending") {
+      result.sort((a, b) => a[condition.name] - b[condition.name]);
+    } else {
+      result.sort((a, b) => b[condition.name] - a[condition.name]);
+    }
+  }
+  
+  return result;
 }
 
 // Resolver

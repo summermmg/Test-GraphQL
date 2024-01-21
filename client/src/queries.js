@@ -6,15 +6,4 @@ const getMyDataList = `query getDataList($datamanager:Datamanager) {
   }
 }`;
 
-const searchDataByOrder = `{
-    searchData(order: 2) {            
-      areaId
-      order
-      geoCode
-      geoName
-      count
-      index
-    }
-  }`;
-
-export { getMyDataList, searchDataByOrder };
+export { getMyDataList };
