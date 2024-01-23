@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { DataManager, Query, GraphQLAdaptor } from "@syncfusion/ej2-data";
+import {
+  DataManager,
+  Query,
+  GraphQLAdaptor,
+  Predicate,
+} from "@syncfusion/ej2-data";
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -12,22 +17,48 @@ import { getMyDataList } from "../queries";
 
 const SERVICE_URI = "http://localhost:4000/graphql";
 const sortComparer = () => 0;
+const pageSize = 4;
 
 function Table() {
   const [tableData, setTableData] = useState([]);
-  const [datamanager, setDatamanager] = useState({ pageIndex: 1, pageSize: 4 });
+  const [datamanager, setDatamanager] = useState({ pageIndex: 1, pageSize });
 
   const formatQuery = (newDatamanager) => {
     let query = new Query();
     const { sorted, pageIndex, pageSize } = newDatamanager;
 
+    // append sort query
     if (sorted && sorted.length > 0) {
       query = query.sortBy(sorted[0].name, sorted[0].direction);
     }
 
-    // TODO: append other queries
-
+    // append paging query
     query = query.page(pageIndex, pageSize);
+
+    // TODO: append filter query
+    // between 2 - 5 or between 7-10
+    // [{"isComplex":true,"ignoreCase":false,"condition":"or","predicates":[{"isComplex":true,"ignoreCase":false,"condition":"and","predicates":[{"isComplex":false,"field":"order","operator":"greaterthan","value":2,"ignoreCase":false},{"isComplex":false,"field":"order","operator":"lessthan","value":5,"ignoreCase":false}]},{"isComplex":true,"ignoreCase":false,"condition":"and","predicates":[{"isComplex":false,"field":"order","operator":"greaterthan","value":7,"ignoreCase":false},{"isComplex":false,"field":"order","operator":"lessthan","value":10,"ignoreCase":false}]}]}]
+    // const predicate1 = new Predicate("order", "greaterthan", 2).and(
+    //   "order",
+    //   "lessthan",
+    //   5
+    // );
+    // const predicate2 = new Predicate("order", "greaterthan", 7).and(
+    //   "order",
+    //   "lessthan",
+    //   10
+    // );
+
+    // const predicates = predicate1.or(predicate2);
+    // query = query.where(predicates);
+
+    // append additional params
+    const reportInput = {
+      area: "test area",
+      benchmark: "test benchmark",
+      variables: ["variable1", "variable2", "variable3"],
+    };
+    query = query.addParams("reportInput", reportInput);
 
     return query;
   };
@@ -87,10 +118,9 @@ function Table() {
   };
 
   const onPagingClick = (args) => {
-    // console.log(args);
     const newDatamanager = getDatamanager("paging", {
       pageIndex: args.currentPage,
-      pageSize: 4,
+      pageSize,
     });
 
     fetchDataList(newDatamanager);
@@ -98,66 +128,68 @@ function Table() {
   };
 
   return (
-    <>
-      <GridComponent
-        dataSource={tableData}
-        allowSorting={true}
-        actionBegin={onActionBegin}
-      >
-        <ColumnsDirective>
-          <ColumnDirective
-            field="order"
-            headerText="Order"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-          <ColumnDirective
-            field="areaId"
-            headerText="Area Id"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-          <ColumnDirective
-            field="geoCode"
-            headerText="Geography Code"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-          <ColumnDirective
-            field="geoName"
-            headerText="Geography Name"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-          <ColumnDirective
-            field="count"
-            headerText="Count"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-          <ColumnDirective
-            field="index"
-            headerText="Index"
-            width="20%"
-            textAlign="Right"
-            sortComparer={sortComparer}
-          />
-        </ColumnsDirective>
-        <Inject services={[Sort]} />
-      </GridComponent>
+    <div className="table-container">
+      <div className="table">
+        <GridComponent
+          dataSource={tableData}
+          allowSorting={true}
+          actionBegin={onActionBegin}
+        >
+          <ColumnsDirective>
+            <ColumnDirective
+              field="order"
+              headerText="Order"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+            <ColumnDirective
+              field="areaId"
+              headerText="Area Id"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+            <ColumnDirective
+              field="geoCode"
+              headerText="Geography Code"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+            <ColumnDirective
+              field="geoName"
+              headerText="Geography Name"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+            <ColumnDirective
+              field="count"
+              headerText="Count"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+            <ColumnDirective
+              field="index"
+              headerText="Index"
+              width="20%"
+              textAlign="Right"
+              sortComparer={sortComparer}
+            />
+          </ColumnsDirective>
+          <Inject services={[Sort]} />
+        </GridComponent>
 
-      <PagerComponent
-        totalRecordsCount={12}
-        pageSize={4}
-        pageCount={3}
-        click={onPagingClick}
-      ></PagerComponent>
-    </>
+        <PagerComponent
+          totalRecordsCount={12}
+          pageSize={pageSize}
+          pageCount={3}
+          click={onPagingClick}
+        ></PagerComponent>
+      </div>
+    </div>
   );
 }
 

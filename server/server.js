@@ -17,14 +17,17 @@ const schema = buildSchema(`
         areaId: String
         order: Int
         geoCode: String
+        geoName: String
         count: Float
         index: Int
       }
 
       input Datamanager {
+        params: String
         sorted: [Sorted]
         skip: Int
         take: Int
+        where: String
       }
 
       input Sorted {
@@ -37,8 +40,17 @@ const schema = buildSchema(`
 function getDataList({ datamanager }) {
   let result = [...data];
 
+  if (datamanager.params) {
+    // fetch data by report input
+    const params = JSON.parse(datamanager.params);
+    const { reportInput } = params;
+
+    console.log("reportInput", reportInput);
+  }
+
+  // perform filtering
   if (datamanager.where) {
-    // perform filtering
+    console.log(datamanager.where);
   }
 
   // perform paging
@@ -49,8 +61,8 @@ function getDataList({ datamanager }) {
     );
   }
 
+  // perform sorting
   if (datamanager.sorted) {
-    // perform sorting
     const condition = datamanager.sorted[0];
     if (condition.direction === "ascending") {
       result.sort((a, b) => a[condition.name] - b[condition.name]);
