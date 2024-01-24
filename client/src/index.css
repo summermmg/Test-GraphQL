@@ -32,3 +32,19 @@ code {
   width: 70%;
   margin-top: 5rem;
 }
+
+.filter-component {
+  margin: 3rem;
+  width: 50%;
+}
+
+.filter-input-list {
+  margin: 3rem;
+}
+
+.filter-input {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

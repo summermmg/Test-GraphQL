@@ -1,11 +1,8 @@
-const getMyDataList = `query getDataList($datamanager:Datamanager) {
+const getMyDataList = (
+  columns
+) => `query getDataList($datamanager:Datamanager) {
   myDataList(datamanager: $datamanager) {
-    order
-    geoCode
-    geoName
-    count
-    index
-    areaId
+${columns.reduce((acc, curr) => `${acc} ${curr.field}`, "")}
   }
 }`;
 
