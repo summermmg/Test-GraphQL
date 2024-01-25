@@ -7,12 +7,14 @@ import {
   PagerComponent,
 } from "@syncfusion/ej2-react-grids";
 import { columns } from "./inputList";
+import { nanoid } from "nanoid";
 
 const sortComparer = () => 0;
 const pageSize = 4;
 
 function Table(props) {
-  const { tableData, datamanager, setDatamanager, fetchDataList} = props
+  const { tableData, totalRecord, datamanager, setDatamanager, fetchDataList } =
+    props;
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
@@ -67,6 +69,7 @@ function Table(props) {
           <ColumnsDirective>
             {columns.map((col) => (
               <ColumnDirective
+                key={nanoid()}
                 field={col.field}
                 textAlign={col.textAlign}
                 width={col.width || "10%"}
@@ -78,12 +81,14 @@ function Table(props) {
           <Inject services={[Sort]} />
         </GridComponent>
 
-        <PagerComponent
-          totalRecordsCount={12}
-          pageSize={pageSize}
-          pageCount={3}
-          click={onPagingClick}
-        ></PagerComponent>
+        {totalRecord && (
+          <PagerComponent
+            totalRecordsCount={totalRecord}
+            pageSize={pageSize}
+            pageCount={Math.ceil(totalRecord / pageSize)}
+            click={onPagingClick}
+          ></PagerComponent>
+        )}
       </div>
     </div>
   );

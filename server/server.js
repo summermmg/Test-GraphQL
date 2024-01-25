@@ -4,53 +4,61 @@ const data = require("./data.json");
 var { buildSchema } = require("graphql");
 const cors = require("cors");
 const app = express();
+const { filterList } = require("./utility");
 
-// allow cross-origin requests
 app.use(cors());
 
 // GraphQL Schema
 const schema = buildSchema(`
-      type Query {
-        myDataList(datamanager: Datamanager): [MyData]
-      }
-      type MyData {
-        areaId: String
-        order: Int
-        geoCode: String
-        geoName: String
-        count: Float
-        index: Int
-      }
+    input Sorted {
+      name: String
+      direction: String
+    }
 
-      input Datamanager {
-        params: String
-        sorted: [Sorted]
-        skip: Int
-        take: Int
-        where: String
-      }
+    input Datamanager {
+      params: String
+      sorted: [Sorted]
+      skip: Int
+      take: Int
+      where: String
+    }
+    
+    type MyData {
+      areaId: String
+      order: Int
+      geoCode: String
+      geoName: String
+      count: Float
+      index: Int
+    }
 
-      input Sorted {
-        name: String
-        direction: String
-      }
+    type ReturnType {
+      result: [MyData]
+      totalRecord: Int
+    }
+
+    type Query {
+      myDataList(datamanager: Datamanager): ReturnType
+    }
 `);
 
 // Get data list
 function getDataList({ datamanager }) {
   let result = [...data];
+  let totalRecord = result.length;
 
   if (datamanager.params) {
     // fetch data by report input
     const params = JSON.parse(datamanager.params);
     const { reportInput } = params;
 
-    console.log("reportInput", reportInput);
+    // console.log("reportInput", reportInput);
   }
 
   // perform filtering
   if (datamanager.where) {
-    console.log(datamanager.where);
+    result = filterList(result, JSON.parse(datamanager.where));
+    totalRecord = result.length;
   }
 
   // perform paging
@@ -71,7 +79,7 @@ function getDataList({ datamanager }) {
     }
   }
 
-  return result;
+  return { result, totalRecord };
 }
 
 // Resolver

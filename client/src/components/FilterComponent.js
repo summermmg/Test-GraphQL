@@ -1,17 +1,17 @@
-import { useEffect } from "react";
 import { nanoid } from "nanoid";
-// import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
+import { SwitchComponent } from "@syncfusion/ej2-react-buttons";
 import FilterInput from "./FilterInput";
 import { columns, operatorList } from "./inputList";
 
 const FilterComponent = (props) => {
-  const { filterSettings, setFilterSettings, onFilterApply } = props;
-
-  useEffect(() => {
-    console.log(filterSettings);
-  }, [filterSettings]);
-
-  // TODO: Add and / or and add new filter functionality
+  const {
+    filterSettings,
+    setFilterSettings,
+    onFilterApply,
+    onAddNewFilter,
+    onFilterReset,
+    onConditionChange,
+  } = props;
 
   return (
     <div className="filter-component">
@@ -28,7 +28,14 @@ const FilterComponent = (props) => {
         ))}
       </div>
 
-      <button  onClick={onFilterApply}>Apply</button >
+      <SwitchComponent
+        change={onConditionChange}
+        checked={filterSettings.condition === "and"}
+      />
+      <span>{filterSettings.condition}</span>
+      <button onClick={onAddNewFilter}>Add new filter</button>
+      <button onClick={onFilterApply}>Apply</button>
+      <button onClick={onFilterReset}>Reset</button>
     </div>
   );
 };

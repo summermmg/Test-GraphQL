@@ -25,7 +25,7 @@
     "baseCount": 438474,
     "basePercent": 7,
     "percentPen": 100,
-    "index": 100
+    "index": 200
   },
   {
     "areaId": "area",
@@ -39,7 +39,7 @@
     "baseCount": 266892,
     "basePercent": 4,
     "percentPen": 100,
-    "index": 100
+    "index": 300
   },
   {
     "areaId": "area",
@@ -53,7 +53,7 @@
     "baseCount": 234980,
     "basePercent": 4,
     "percentPen": 100,
-    "index": 100
+    "index": 400
   },
   {
     "areaId": "area",
@@ -81,7 +81,7 @@
     "baseCount": 181908,
     "basePercent": 3,
     "percentPen": 100,
-    "index": 100
+    "index": 300
   },
   {
     "areaId": "area",
@@ -95,7 +95,7 @@
     "baseCount": 117499,
     "basePercent": 2,
     "percentPen": 100,
-    "index": 100
+    "index": 200
   },
   {
     "areaId": "area",
@@ -109,7 +109,7 @@
     "baseCount": 110138,
     "basePercent": 1,
     "percentPen": 100,
-    "index": 100
+    "index": 400
   },
   {
     "areaId": "area",
@@ -123,7 +123,7 @@
     "baseCount": 107114,
     "basePercent": 1,
     "percentPen": 100,
-    "index": 100
+    "index": 300
   },
   {
     "areaId": "area",
@@ -151,7 +151,7 @@
     "baseCount": 77919,
     "basePercent": 1,
     "percentPen": 100,
-    "index": 100
+    "index": 200
   },
   {
     "areaId": "area",
@@ -165,6 +165,6 @@
     "baseCount": 77289,
     "basePercent": 1,
     "percentPen": 100,
-    "index": 100
+    "index": 300
   }
 ]

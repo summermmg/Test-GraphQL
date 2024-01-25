@@ -30,27 +30,38 @@ function App() {
   // datamanager contains sorting and paging info
   const [datamanager, setDatamanager] = useState({ pageIndex: 1, pageSize });
   const [tableData, setTableData] = useState([]);
+  const [totalRecord, setTotalRecord] = useState(0);
   const [filterSettings, setFilterSettings] = useState(defaultFilterSettings);
 
   const generateFilterQuery = (query, settings) => {
-    if (settings.condition === "and") {
-      const { filters } = settings;
+    const { condition, filters } = settings;
 
-      if (filters.length > 0) {
-        let predicate = new Predicate(
-          filters[0].field,
-          filters[0].operator,
-          Number(filters[0].value)
-        );
+    if (filters.length > 0) {
+      let predicate = new Predicate(
+        filters[0].field,
+        filters[0].operator,
+        Number(filters[0].value)
+      );
 
-        filters.forEach((filter, index) => {
-          if (index > 0) {
-            predicate.and(filter.field, filter.operator, Number(filter.value));
+      filters.forEach((filter, index) => {
+        if (index > 0) {
+          if (condition === "and") {
+            predicate = predicate.and(
+              filter.field,
+              filter.operator,
+              Number(filter.value)
+            );
+          } else if (condition === "or") {
+            predicate = predicate.or(
+              filter.field,
+              filter.operator,
+              Number(filter.value)
+            );
           }
-        });
+        }
+      });
 
-        return query.where(predicate);
-      }
+      return query.where(predicate);
     }
   };
 
@@ -101,14 +112,16 @@ function App() {
       url: SERVICE_URI,
       adaptor: new GraphQLAdaptor({
         response: {
-          result: "myDataList", // map the response
+          result: "myDataList.result", // map the response
+          count: "myDataList.totalRecord", // map the response
         },
         query: getMyDataList(columns),
       }),
     })
       .executeQuery(query)
       .then((e) => {
-        setTableData(e?.result);
+        setTableData(e?.result.result);
+        setTotalRecord(e?.result.count)
       });
   };
 
@@ -122,6 +135,35 @@ function App() {
     fetchDataList(datamanager);
   };
 
+  const onAddNewFilter = () => {
+    const newFilters = [...filterSettings.filters];
+
+    newFilters.push({
+      id: nanoid(),
+      field: columns[3].field,
+      operator: operatorList[0],
+      value: "",
+    });
+
+    setFilterSettings({
+      ...filterSettings,
+      filters: newFilters,
+    });
+  };
+
+  const onFilterReset = () => {
+    setFilterSettings(defaultFilterSettings);
+  };
+
+  const onConditionChange = (e) => {
+    const newSettings = {
+      ...filterSettings,
+      condition: e.checked ? "and" : "or",
+    };
+
+    setFilterSettings(newSettings);
+  };
+
   return (
     <div className="">
       <Table
@@ -129,11 +171,15 @@ function App() {
         datamanager={datamanager}
         setDatamanager={setDatamanager}
         fetchDataList={fetchDataList}
+        totalRecord={totalRecord}
       />
       <FilterComponent
         filterSettings={filterSettings}
         setFilterSettings={setFilterSettings}
         onFilterApply={onFilterApply}
+        onAddNewFilter={onAddNewFilter}
+        onFilterReset={onFilterReset}
+        onConditionChange={onConditionChange}
       />
     </div>
   );
