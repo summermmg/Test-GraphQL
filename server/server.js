@@ -1,6 +1,6 @@
 var express = require("express");
 var { graphqlHTTP } = require("express-graphql");
-const data = require("./data.json");
+const data = require("./profile.json");
 var { buildSchema } = require("graphql");
 const cors = require("cors");
 const app = express();
@@ -26,9 +26,17 @@ const schema = buildSchema(`
     type MyData {
       areaId: String
       order: Int
-      geoCode: String
-      geoName: String
+      sg: String
+      lg: String
+      segmentCode: Int
+      segmentName: String
+      varCode: String
+      varDesc: String
       count: Float
+      percentComp: Float
+      baseCount: Float
+      basePercent: Float
+      percentPen: Float
       index: Int
     }
 

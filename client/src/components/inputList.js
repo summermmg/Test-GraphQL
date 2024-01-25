@@ -1,21 +1,29 @@
+// TODO: get from columns query
 export const columns = [
   {
-    field: "order",
-    headerText: "Order",
+    field: "segmentCode",
+    headerText: "Code",
     width: "20%",
     textAlign: "Right",
     id: 1,
   },
   {
-    field: "geoCode",
-    headerText: "Geography Name",
+    field: "sg",
+    headerText: "SG",
+    width: "20%",
+    textAlign: "Right",
+    id: 1,
+  },
+  {
+    field: "lg",
+    headerText: "LG",
     width: "20%",
     textAlign: "Right",
     id: 2,
   },
   {
-    field: "geoName",
-    headerText: "Geography Code",
+    field: "segmentName",
+    headerText: "Segment Name",
     width: "20%",
     textAlign: "Right",
     id: 3,
@@ -26,7 +34,21 @@ export const columns = [
     width: "20%",
     textAlign: "Right",
     isNumeric: true,
+    isHidable: true,
     id: 4,
+    hasAccessor: true,
+    precision: 2,
+  },
+  {
+    field: "percentComp",
+    headerText: "Percent Comp",
+    width: "20%",
+    textAlign: "Right",
+    isNumeric: true,
+    isHidable: true,
+    id: 5,
+    hasAccessor: true,
+    precision: 2,
   },
   {
     field: "index",
@@ -34,21 +56,15 @@ export const columns = [
     width: "20%",
     textAlign: "Right",
     isNumeric: true,
-    id: 5,
-  },
-  {
-    field: "areaId",
-    headerText: "Area Id",
-    width: "20%",
-    textAlign: "Right",
+    isHidable: true,
     id: 6,
   },
 ];
 
 export const operatorList = [
-  'greaterthan',
-  'lessthan',
-  'greaterthanorequal',
-  'lessthanorequal',
-  'equal',
-]
+  "greaterthan",
+  "lessthan",
+  "greaterthanorequal",
+  "lessthanorequal",
+  "equal",
+];

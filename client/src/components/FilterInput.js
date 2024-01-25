@@ -49,13 +49,6 @@ const FilterInput = ({
     setFilterSettings({ condition: "and", filters: newArray });
   };
 
-  function onInputFocus() {
-    inputRef.current.focus();
-  }
-  function onInputBlur() {
-    inputRef.current.blur();
-  }
-
   return (
     <div className="filter-input">
       <DropDownListComponent
@@ -77,8 +70,6 @@ const FilterInput = ({
         className="e-input"
         type="text"
         placeholder="Enter Value"
-        onFocus={onInputFocus}
-        onBlur={onInputBlur}
         onChange={onValueChange}
         value={filter.value}
       />

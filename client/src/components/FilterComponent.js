@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { SwitchComponent } from "@syncfusion/ej2-react-buttons";
+import { SwitchComponent, ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import FilterInput from "./FilterInput";
 import { columns, operatorList } from "./inputList";
 
@@ -28,14 +28,19 @@ const FilterComponent = (props) => {
         ))}
       </div>
 
-      <SwitchComponent
-        change={onConditionChange}
-        checked={filterSettings.condition === "and"}
-      />
-      <span>{filterSettings.condition}</span>
-      <button onClick={onAddNewFilter}>Add new filter</button>
-      <button onClick={onFilterApply}>Apply</button>
-      <button onClick={onFilterReset}>Reset</button>
+      <div className="filter-buttons">
+        <div className="filter-button">
+          <SwitchComponent
+            change={onConditionChange}
+            checked={filterSettings.condition === "and"}
+          />
+          <span>{filterSettings.condition}</span>
+        </div>
+
+        <ButtonComponent className="filter-button" onClick={onAddNewFilter}>Add new filter</ButtonComponent>
+        <ButtonComponent className="filter-button" onClick={onFilterApply}>Apply</ButtonComponent>
+        <ButtonComponent className="filter-button" onClick={onFilterReset}>Reset</ButtonComponent>
+      </div>
     </div>
   );
 };

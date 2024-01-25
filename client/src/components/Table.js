@@ -10,7 +10,7 @@ import { columns } from "./inputList";
 import { nanoid } from "nanoid";
 
 const sortComparer = () => 0;
-const pageSize = 4;
+const pageSize = 10;
 
 function Table(props) {
   const { tableData, totalRecord, datamanager, setDatamanager, fetchDataList } =
@@ -59,37 +59,44 @@ function Table(props) {
   };
 
   return (
-    <div className="table-container">
-      <div className="table">
-        <GridComponent
-          dataSource={tableData}
-          allowSorting={true}
-          actionBegin={onActionBegin}
-        >
-          <ColumnsDirective>
-            {columns.map((col) => (
-              <ColumnDirective
-                key={nanoid()}
-                field={col.field}
-                textAlign={col.textAlign}
-                width={col.width || "10%"}
-                headerText={col.headerText || ""}
-                sortComparer={sortComparer}
-              />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Sort]} />
-        </GridComponent>
+    <div className="table">
+      <GridComponent
+        dataSource={tableData}
+        allowSorting={true}
+        actionBegin={onActionBegin}
+      >
+        <ColumnsDirective>
+          {columns.map((col) => (
+            <ColumnDirective
+              key={nanoid()}
+              field={col.field}
+              textAlign={col.textAlign}
+              width={col.width || "10%"}
+              headerText={col.headerText || ""}
+              sortComparer={sortComparer}
+              valueAccessor={
+                col.hasAccessor
+                  ? (field, value) =>
+                      Number(value[field]).toLocaleString("en-US", {
+                        minimumFractionDigits: col.precision,
+                        maximumFractionDigits: col.precision,
+                      })
+                  : null
+              }
+            />
+          ))}
+        </ColumnsDirective>
+        <Inject services={[Sort]} />
+      </GridComponent>
 
-        {totalRecord && (
-          <PagerComponent
-            totalRecordsCount={totalRecord}
-            pageSize={pageSize}
-            pageCount={Math.ceil(totalRecord / pageSize)}
-            click={onPagingClick}
-          ></PagerComponent>
-        )}
-      </div>
+      {totalRecord && (
+        <PagerComponent
+          totalRecordsCount={totalRecord}
+          pageSize={pageSize}
+          pageCount={Math.ceil(totalRecord / pageSize)}
+          click={onPagingClick}
+        ></PagerComponent>
+      )}
     </div>
   );
 }

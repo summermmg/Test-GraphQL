@@ -4,6 +4,11 @@ import "./index.css";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import {
+  TabComponent,
+  TabItemDirective,
+  TabItemsDirective,
+} from "@syncfusion/ej2-react-navigations";
+import {
   DataManager,
   Query,
   GraphQLAdaptor,
@@ -13,14 +18,14 @@ import { columns, operatorList } from "./components/inputList";
 import { getMyDataList } from "./queries";
 
 const SERVICE_URI = "http://localhost:4000/graphql";
-const pageSize = 4;
+const pageSize = 10;
 const defaultFilterSettings = {
   condition: "and",
   filters: [
     {
       id: nanoid(),
-      field: columns[3].field,
-      operator: operatorList[0],
+      field: 'index',
+      operator: 'greaterthanorequal',
       value: "",
     },
   ],
@@ -121,7 +126,7 @@ function App() {
       .executeQuery(query)
       .then((e) => {
         setTableData(e?.result.result);
-        setTotalRecord(e?.result.count)
+        setTotalRecord(e?.result.count);
       });
   };
 
@@ -140,8 +145,8 @@ function App() {
 
     newFilters.push({
       id: nanoid(),
-      field: columns[3].field,
-      operator: operatorList[0],
+      field: "index",
+      operator: 'greaterthanorequal',
       value: "",
     });
 
@@ -164,8 +169,34 @@ function App() {
     setFilterSettings(newSettings);
   };
 
+  const getContent = (type) => {
+    let content;
+
+    switch (type) {
+      case "filter":
+        content = (
+          <FilterComponent
+            filterSettings={filterSettings}
+            setFilterSettings={setFilterSettings}
+            onFilterApply={onFilterApply}
+            onAddNewFilter={onAddNewFilter}
+            onFilterReset={onFilterReset}
+            onConditionChange={onConditionChange}
+          />
+        );
+
+        break;
+
+      default:
+        content = <div>test</div>;
+        break;
+    }
+
+    return content;
+  };
+
   return (
-    <div className="">
+    <div className="container">
       <Table
         tableData={tableData}
         datamanager={datamanager}
@@ -173,14 +204,22 @@ function App() {
         fetchDataList={fetchDataList}
         totalRecord={totalRecord}
       />
-      <FilterComponent
-        filterSettings={filterSettings}
-        setFilterSettings={setFilterSettings}
-        onFilterApply={onFilterApply}
-        onAddNewFilter={onAddNewFilter}
-        onFilterReset={onFilterReset}
-        onConditionChange={onConditionChange}
-      />
+      <TabComponent>
+        <TabItemsDirective>
+          <TabItemDirective
+            header={{ text: "filter" }}
+            content={() => getContent("filter")}
+          />
+          <TabItemDirective
+            header={{ text: "Hide Column" }}
+            content={() => getContent("hideColumn")}
+          />
+          <TabItemDirective
+            header={{ text: "Grouping" }}
+            content={() => getContent("grouping")}
+          />
+        </TabItemsDirective>
+      </TabComponent>
     </div>
   );
 }
