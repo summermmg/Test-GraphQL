@@ -1,10 +1,11 @@
 var express = require("express");
 var { graphqlHTTP } = require("express-graphql");
 const data = require("./profile.json");
+const { columns } = require("./columns.js");
 var { buildSchema } = require("graphql");
 const cors = require("cors");
 const app = express();
-const { filterList } = require("./utility");
+const { filterList, getStackedColumns } = require("./utility");
 
 app.use(cors());
 
@@ -40,6 +41,20 @@ const schema = buildSchema(`
       index: Int
     }
 
+    type MyColumn {
+      field: String
+      headerText: String
+      width: String
+      textAlign: String
+      id: Int
+      isNumeric: Boolean
+      isHidable: Boolean
+      hasAccessor: Boolean
+      precision: Int
+      columns: [MyColumn]
+      headerTemplate: String
+    }
+
     type ReturnType {
       result: [MyData]
       totalRecord: Int
@@ -47,6 +62,7 @@ const schema = buildSchema(`
 
     type Query {
       myDataList(datamanager: Datamanager): ReturnType
+      myColumns(datamanager: Datamanager): [MyColumn]
     }
 `);
 
@@ -90,9 +106,33 @@ function getDataList({ datamanager }) {
   return { result, totalRecord };
 }
 
+const getColumns = ({ datamanager }) => {
+  let result = [...columns];
+
+  if (datamanager.params) {
+    // fetch data by report input
+    const params = JSON.parse(datamanager.params);
+    const { reportType, hideColInfo, withStackedHeader, reportInputsInfo } =
+      params;
+
+    // get columns by reportType
+
+    if (withStackedHeader) {
+      result = getStackedColumns(result, hideColInfo, reportInputsInfo);
+    } else {
+      result = result.filter(
+        (col) => !(col.isHidable && hideColInfo.includes(col.field))
+      );
+    }
+  }
+
+  return result;
+};
+
 // Resolver
 const root = {
   myDataList: getDataList,
+  myColumns: getColumns,
 };
 
 // bind express with graphql

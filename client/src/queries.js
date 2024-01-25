@@ -7,4 +7,29 @@ const getMyDataList = (
     }
   }}`;
 
-export { getMyDataList };
+const getMyColumns = () => `query getColumns($datamanager:Datamanager) {
+    myColumns(datamanager: $datamanager) {
+      field
+      id
+      headerText
+      width
+      textAlign
+      isNumeric
+      isHidable
+      hasAccessor
+      precision
+      headerTemplate
+      columns {
+        field
+        id
+        headerText
+        width
+        textAlign
+        isNumeric
+        isHidable
+        hasAccessor
+        precision
+      }      
+    }}`;
+
+export { getMyDataList,getMyColumns };

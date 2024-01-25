@@ -69,4 +69,65 @@ const filterList = (list, where) => {
   return result;
 };
 
-module.exports = { filterList };
+const getHeaderTemplate = (reportInput) => {
+  const { reportAssetDetails } = reportInput;
+  const tradeAreaTxt = reportAssetDetails?.tradearea?.value;
+  const benchmarkTxt = reportAssetDetails?.benchmark?.value;
+  const variableTxt = reportAssetDetails?.variable?.value;
+  let content = `<div class='stacked-header'>
+  <p class="title">${reportInput.reportName || "-"}</p>`;
+
+  if (tradeAreaTxt)
+    content += `<p class="text"><span class="text-header">Trade Area: </span>${
+      tradeAreaTxt || "-"
+    }</p>`;
+
+  if (benchmarkTxt)
+    content += `<p class="text"><span class="text-header">Benchmark: </span>${
+      benchmarkTxt || "-"
+    }</p>`;
+  if (variableTxt)
+    content += `<p class="text"><span class="text-header">Variable: </span>${
+      variableTxt || ""
+    }</p>`;
+
+  return content;
+};
+
+const getSubColumns = (index, columns, hideColInfo) => {
+  let result = [];
+
+  if (index === 0) {
+    result = [...columns];
+  } else if (index > 0) {
+    columns.forEach((col) => {
+      if (col.isNumeric && !hideColInfo.includes(col.field)) {
+        result.push({
+          ...col,
+          field: `${col.field}${index}`,
+        });
+      }
+    });
+  }
+
+  return result;
+};
+
+const getStackedColumns = (columns, hideColInfo, reportInputsInfo) => {
+  let result = [];
+
+  reportInputsInfo.forEach((reportInput, index) => {
+    const obj = {
+      textAlign: "center",
+      field: `stackedHeader-${index}`,
+      headerTemplate: getHeaderTemplate(reportInput),
+      columns: getSubColumns(index, columns, hideColInfo),
+    };
+
+    result.push(obj);
+  });
+
+  return result;
+};
+
+module.exports = { filterList, getStackedColumns };

@@ -15,7 +15,7 @@ import {
   Predicate,
 } from "@syncfusion/ej2-data";
 import { columns, operatorList } from "./components/inputList";
-import { getMyDataList } from "./queries";
+import { getMyDataList, getMyColumns } from "./queries";
 
 const SERVICE_URI = "http://localhost:4000/graphql";
 const pageSize = 10;
@@ -24,8 +24,8 @@ const defaultFilterSettings = {
   filters: [
     {
       id: nanoid(),
-      field: 'index',
-      operator: 'greaterthanorequal',
+      field: "index",
+      operator: "greaterthanorequal",
       value: "",
     },
   ],
@@ -130,8 +130,58 @@ function App() {
       });
   };
 
+  const reportInputsInfo = [
+    {
+      reportName: "test active report",
+      reportAssetDetails: {
+        tradearea: { type: "Area", value: "Ontario" },
+        benchmark: { type: "Benchmark", value: "Canada" },
+        variable: { type: "Variable", value: "test variable active" },
+      },
+    },
+    {
+      reportName: "test compare report 1",
+      reportAssetDetails: {
+        tradearea: { type: "Area", value: "Montreal" },
+        benchmark: { type: "Benchmark", value: "Canada" },
+        variable: { type: "Variable", value: "test variable compare 2" },
+      },
+    },
+    {
+      reportName: "test compare report 2",
+      reportAssetDetails: {
+        tradearea: { type: "Area", value: "Alberta" },
+        benchmark: { type: "Benchmark", value: "Canada" },
+        variable: { type: "Variable", value: "test variable compare 2" },
+      },
+    },
+  ];
+
+  const fetchColumns = () => {
+    const query = new Query()
+      .addParams("reportType", "profileArea")
+      .addParams("hideColInfo", ["count"])
+      .addParams("withStackedHeader", true)
+      .addParams("reportInputsInfo", reportInputsInfo);
+
+    new DataManager({
+      url: SERVICE_URI,
+      adaptor: new GraphQLAdaptor({
+        response: {
+          result: "myColumns", // map the response
+        },
+        query: getMyColumns(),
+      }),
+    })
+      .executeQuery(query)
+      .then((e) => {
+        console.log(e)
+      });
+  };
+
   useEffect(() => {
     fetchDataList(datamanager);
+    fetchColumns()
   }, []);
 
   const onFilterApply = (e) => {
@@ -146,7 +196,7 @@ function App() {
     newFilters.push({
       id: nanoid(),
       field: "index",
-      operator: 'greaterthanorequal',
+      operator: "greaterthanorequal",
       value: "",
     });
 
