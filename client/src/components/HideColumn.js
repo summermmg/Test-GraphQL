@@ -50,9 +50,6 @@ const HideColumn = (props) => {
       </div>
 
       <div className="buttons">
-        <ButtonComponent className="apply-button" onClick={onHideColApply}>
-          Apply
-        </ButtonComponent>
         <div className="">
           <SwitchComponent
             change={onStackedHeaderChange}
@@ -60,6 +57,9 @@ const HideColumn = (props) => {
           />
           <span>Show Stacked Header</span>
         </div>
+        <ButtonComponent className="apply-button" onClick={onHideColApply}>
+          Apply
+        </ButtonComponent>
       </div>
     </div>
   );

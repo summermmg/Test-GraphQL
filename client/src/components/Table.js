@@ -5,7 +5,10 @@ import {
   Inject,
   Sort,
   PagerComponent,
+  Group,
 } from "@syncfusion/ej2-react-grids";
+import { getValue } from "@syncfusion/ej2-base";
+
 import { nanoid } from "nanoid";
 import { useEffect, useRef } from "react";
 
@@ -20,15 +23,16 @@ function Table(props) {
     datamanager,
     setDatamanager,
     fetchDataList,
+    groupOptions,
   } = props;
 
   const grid = useRef();
 
   useEffect(() => {
-    if (grid.current) {
+    if (grid?.current) {
       grid.current.componentRefresh();
     }
-  }, [tableColumns]);
+  }, [tableColumns, groupOptions]);
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
@@ -78,6 +82,8 @@ function Table(props) {
         <GridComponent
           dataSource={tableData}
           allowSorting={true}
+          allowGrouping={true}
+          groupSettings={groupOptions}
           actionBegin={onActionBegin}
           ref={grid}
         >
@@ -104,7 +110,7 @@ function Table(props) {
               />
             ))}
           </ColumnsDirective>
-          <Inject services={[Sort]} />
+          <Inject services={[Sort, Group]} />
         </GridComponent>
       )}
 

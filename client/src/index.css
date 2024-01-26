@@ -50,6 +50,10 @@ code {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  .e-switch-wrapper {
+    margin: 0 10px 0 0;
+  }
 }
 
 .filter-buttons {
@@ -93,7 +97,16 @@ code {
     flex-direction: column;
 
     .apply-button {
-      margin: 1rem 0;
+      margin: 2rem 0 0 0;
     }
+  }
+}
+
+.grouping {
+  display: flex;
+  flex-direction: column;
+
+  .e-radio-wrapper {
+    margin: 0.5rem 0;
   }
 }

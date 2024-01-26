@@ -1,6 +1,7 @@
 import Table from "./components/Table";
 import FilterComponent from "./components/FilterComponent";
 import HideColumn from "./components/HideColumn";
+import Grouping from "./components/grouping";
 import "./index.css";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -33,6 +34,23 @@ const defaultFilterSettings = {
 };
 
 function App() {
+  const renderCaptionTemplate = (groupItems) => {
+    if (groupItems && groupItems.items.length === 0) return null;
+
+    const groupFirstItem = groupItems.items[0];
+    const label = groupFirstItem.segmentName;
+
+    return <span className="group-label">{label}</span>;
+  };
+
+  const defaultGroupSettings = {
+    showGroupedColumn: true,
+    showDropArea: false,
+    allowReordering: true,
+    columns: [],
+    captionTemplate: renderCaptionTemplate,
+  };
+
   // datamanager contains sorting and paging info
   const [datamanager, setDatamanager] = useState({ pageIndex: 1, pageSize });
   const [tableData, setTableData] = useState([]);
@@ -40,7 +58,8 @@ function App() {
   const [totalRecord, setTotalRecord] = useState(0);
   const [filterSettings, setFilterSettings] = useState(defaultFilterSettings);
   const [hideColsInfo, setHideColsInfo] = useState(new Set());
-  const [withStackedHeader, setStackedHeader] = useState(true);
+  const [withStackedHeader, setStackedHeader] = useState(false);
+  const [groupOptions, setGroupOptions] = useState(defaultGroupSettings);
 
   const generateFilterQuery = (query, settings) => {
     const { condition, filters } = settings;
@@ -231,7 +250,12 @@ function App() {
         break;
 
       default:
-        content = <div>test</div>;
+        content = (
+          <Grouping
+            groupOptions={groupOptions}
+            setGroupOptions={setGroupOptions}
+          />
+        );
         break;
     }
 
@@ -247,6 +271,7 @@ function App() {
         setDatamanager={setDatamanager}
         fetchDataList={fetchDataList}
         totalRecord={totalRecord}
+        groupOptions={groupOptions}
       />
       <TabComponent>
         <TabItemsDirective>
