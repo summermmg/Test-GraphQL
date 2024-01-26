@@ -6,11 +6,11 @@ import {
   Sort,
   PagerComponent,
   Group,
+  Aggregate,
 } from "@syncfusion/ej2-react-grids";
-import { getValue } from "@syncfusion/ej2-base";
-
 import { nanoid } from "nanoid";
 import { useEffect, useRef } from "react";
+import { getAggregates } from "./utility";
 
 const sortComparer = () => 0;
 const pageSize = 10;
@@ -24,6 +24,8 @@ function Table(props) {
     setDatamanager,
     fetchDataList,
     groupOptions,
+    aggregate,
+    setAggregate,
   } = props;
 
   const grid = useRef();
@@ -33,6 +35,12 @@ function Table(props) {
       grid.current.componentRefresh();
     }
   }, [tableColumns, groupOptions]);
+
+  useEffect(() => {
+    if (tableData && tableColumns) {
+      setAggregate(getAggregates(tableColumns));
+    }
+  }, [tableData, tableColumns]);
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
@@ -86,6 +94,7 @@ function Table(props) {
           groupSettings={groupOptions}
           actionBegin={onActionBegin}
           ref={grid}
+          aggregates={groupOptions.columns.length > 0 ? aggregate : null}
         >
           <ColumnsDirective>
             {tableColumns.map((col) => (
@@ -110,7 +119,7 @@ function Table(props) {
               />
             ))}
           </ColumnsDirective>
-          <Inject services={[Sort, Group]} />
+          <Inject services={[Sort, Group, Aggregate]} />
         </GridComponent>
       )}
 

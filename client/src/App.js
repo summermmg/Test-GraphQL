@@ -38,7 +38,7 @@ function App() {
     if (groupItems && groupItems.items.length === 0) return null;
 
     const groupFirstItem = groupItems.items[0];
-    const label = groupFirstItem.segmentName;
+    const label = groupFirstItem[groupItems.field];
 
     return <span className="group-label">{label}</span>;
   };
@@ -60,6 +60,7 @@ function App() {
   const [hideColsInfo, setHideColsInfo] = useState(new Set());
   const [withStackedHeader, setStackedHeader] = useState(false);
   const [groupOptions, setGroupOptions] = useState(defaultGroupSettings);
+  const [aggregate, setAggregate] = useState();
 
   const generateFilterQuery = (query, settings) => {
     const { condition, filters } = settings;
@@ -109,18 +110,6 @@ function App() {
     if (filterSettings.filters.length > 0) {
       query = generateFilterQuery(query, filterSettings);
     }
-    // between 2 - 5 or between 7-10
-    // [{"isComplex":true,"ignoreCase":false,"condition":"or","predicates":[{"isComplex":true,"ignoreCase":false,"condition":"and","predicates":[{"isComplex":false,"field":"order","operator":"greaterthan","value":2,"ignoreCase":false},{"isComplex":false,"field":"order","operator":"lessthan","value":5,"ignoreCase":false}]},{"isComplex":true,"ignoreCase":false,"condition":"and","predicates":[{"isComplex":false,"field":"order","operator":"greaterthan","value":7,"ignoreCase":false},{"isComplex":false,"field":"order","operator":"lessthan","value":10,"ignoreCase":false}]}]}]
-    // const predicate1 = new Predicate("order", "greaterthan", 2).and(
-    //   "order",
-    //   "lessthan",
-    //   5
-    // );
-    // const predicate2 = new Predicate("order", "greaterthan", 7).and(
-    //   "order",
-    //   "lessthan",
-    //   10
-    // );
 
     // append additional params
     const reportInput = {
@@ -272,6 +261,8 @@ function App() {
         fetchDataList={fetchDataList}
         totalRecord={totalRecord}
         groupOptions={groupOptions}
+        aggregate={aggregate}
+        setAggregate={setAggregate}
       />
       <TabComponent>
         <TabItemsDirective>
