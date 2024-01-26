@@ -118,6 +118,8 @@ function App() {
       variables: ["variable1", "variable2", "variable3"],
     };
     query = query.addParams("reportInput", reportInput);
+    // TODO: add group info to datamanager and dynamically add group query
+    query = query.addParams("group", "sg");
 
     return query;
   };

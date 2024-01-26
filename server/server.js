@@ -5,7 +5,13 @@ const { columns } = require("./columns.js");
 var { buildSchema } = require("graphql");
 const cors = require("cors");
 const app = express();
-const { filterList, getStackedColumns, isColHidden } = require("./utility");
+const {
+  filterList,
+  getStackedColumns,
+  isColHidden,
+  DEFAULT_LG_ORDER_MAP,
+  DEFAULT_SG_ORDER_MAP,
+} = require("./utility");
 
 app.use(cors());
 
@@ -74,9 +80,21 @@ function getDataList({ datamanager }) {
   if (datamanager.params) {
     // fetch data by report input
     const params = JSON.parse(datamanager.params);
-    const { reportInput } = params;
-
+    const { reportInput, group } = params;
     // console.log("reportInput", reportInput);
+
+    if (group) {
+      if (group === "sg") {
+        console.log(group)
+        result.sort(
+          (a, b) => DEFAULT_SG_ORDER_MAP[a.sg] - DEFAULT_SG_ORDER_MAP[b.sg]
+        );
+      } else if (datamanager.group === "lg") {
+        result.sort(
+          (a, b) => DEFAULT_LG_ORDER_MAP[a.lg] - DEFAULT_LG_ORDER_MAP[b.lg]
+        );
+      }
+    }
   }
 
   // perform filtering

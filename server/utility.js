@@ -133,4 +133,46 @@ const getStackedColumns = (columns, hideColInfo, reportInputsInfo) => {
   return result;
 };
 
-module.exports = { filterList, getStackedColumns, isColHidden };
+const DEFAULT_SG_ORDER = [
+  "U1",
+  "S1",
+  "S2",
+  "F1",
+  "S3",
+  "R1",
+  "S4",
+  "S5",
+  "F2",
+  "U2",
+  "F3",
+  "F4",
+  "R2",
+  "U3",
+  "T1",
+  "S6",
+  "U4",
+  "S7",
+  "R3",
+  "U5",
+  "U6",
+];
+
+const DEFAULT_SG_ORDER_MAP = DEFAULT_SG_ORDER.reduce(
+  (obj, item, index) => ({
+    ...obj,
+    [item]: index,
+  }),
+  {}
+);
+
+const DEFAULT_LG_ORDER = ["Y1", "Y2", "Y3", "F1", "F2", "F3", "M1", "M2"];
+
+const DEFAULT_LG_ORDER_MAP = DEFAULT_LG_ORDER.reduce(
+  (obj, item, index) => ({
+    ...obj,
+    [item]: index,
+  }),
+  {}
+);
+
+module.exports = { filterList, getStackedColumns, isColHidden, DEFAULT_LG_ORDER_MAP, DEFAULT_SG_ORDER_MAP };
