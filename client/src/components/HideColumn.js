@@ -1,9 +1,19 @@
 import { nanoid } from "nanoid";
-import { CheckBoxComponent, ButtonComponent } from "@syncfusion/ej2-react-buttons";
+import {
+  CheckBoxComponent,
+  ButtonComponent,
+  SwitchComponent,
+} from "@syncfusion/ej2-react-buttons";
 import { columns } from "./inputList";
 
 const HideColumn = (props) => {
-  const { hideColsInfo, setHideColsInfo, onHideColApply } = props;
+  const {
+    hideColsInfo,
+    setHideColsInfo,
+    onHideColApply,
+    withStackedHeader,
+    setStackedHeader,
+  } = props;
 
   const onClick = (e) => {
     const value = e?.target?.value;
@@ -19,23 +29,38 @@ const HideColumn = (props) => {
     }
   };
 
+  const onStackedHeaderChange = (e) => {
+    setStackedHeader(e?.checked || false);
+  };
+
   return (
     <div className="hide-column">
-      <div>
-      {columns
-        .filter((col) => col.isHidable)
-        .map((col) => (
-          <CheckBoxComponent
-            key={nanoid()}
-            label={col.field}
-            checked={hideColsInfo.has(col.field)}
-            value={col.field}
-            onClick={onClick}
-          />
-        ))}
+      <div className="check-box-list">
+        {columns
+          .filter((col) => col.isHidable)
+          .map((col) => (
+            <CheckBoxComponent
+              key={nanoid()}
+              label={col.field}
+              checked={hideColsInfo.has(col.field)}
+              value={col.field}
+              onClick={onClick}
+            />
+          ))}
       </div>
-      <ButtonComponent className="apply-button" onClick={onHideColApply}>Apply</ButtonComponent>
 
+      <div className="buttons">
+        <ButtonComponent className="apply-button" onClick={onHideColApply}>
+          Apply
+        </ButtonComponent>
+        <div className="">
+          <SwitchComponent
+            change={onStackedHeaderChange}
+            checked={withStackedHeader}
+          />
+          <span>Show Stacked Header</span>
+        </div>
+      </div>
     </div>
   );
 };

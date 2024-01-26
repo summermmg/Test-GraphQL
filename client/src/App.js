@@ -40,6 +40,7 @@ function App() {
   const [totalRecord, setTotalRecord] = useState(0);
   const [filterSettings, setFilterSettings] = useState(defaultFilterSettings);
   const [hideColsInfo, setHideColsInfo] = useState(new Set());
+  const [withStackedHeader, setStackedHeader] = useState(true);
 
   const generateFilterQuery = (query, settings) => {
     const { condition, filters } = settings;
@@ -137,7 +138,7 @@ function App() {
     const query = new Query()
       .addParams("reportType", "profileArea")
       .addParams("hideColInfo", [...hideColsInfo])
-      .addParams("withStackedHeader", true)
+      .addParams("withStackedHeader", withStackedHeader || false)
       .addParams("reportInputsInfo", reportInputsInfo);
 
     new DataManager({
@@ -223,6 +224,8 @@ function App() {
             hideColsInfo={hideColsInfo}
             setHideColsInfo={setHideColsInfo}
             onHideColApply={onHideColApply}
+            withStackedHeader={withStackedHeader}
+            setStackedHeader={setStackedHeader}
           />
         );
         break;

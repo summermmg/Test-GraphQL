@@ -25,10 +25,7 @@ function Table(props) {
   const grid = useRef();
 
   useEffect(() => {
-    console.log(tableColumns);
     if (grid.current) {
-      console.log(grid.current);
-      grid.current.columnModel = tableColumns.columns;
       grid.current.componentRefresh();
     }
   }, [tableColumns]);

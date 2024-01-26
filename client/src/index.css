@@ -73,3 +73,27 @@ code {
     margin: 0 1rem;
   }
 }
+
+.hide-column {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  .check-box-list {
+    display: flex;
+    flex-direction: column;
+
+    .e-checkbox-wrapper {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+
+    .apply-button {
+      margin: 1rem 0;
+    }
+  }
+}
