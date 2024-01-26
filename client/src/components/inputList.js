@@ -68,3 +68,30 @@ export const operatorList = [
   "lessthanorequal",
   "equal",
 ];
+
+export const reportInputsInfo = [
+  {
+    reportName: "test active report",
+    reportAssetDetails: {
+      tradearea: { type: "Area", value: "Ontario" },
+      benchmark: { type: "Benchmark", value: "Canada" },
+      variable: { type: "Variable", value: "test variable active" },
+    },
+  },
+  // {
+  //   reportName: "test compare report 1",
+  //   reportAssetDetails: {
+  //     tradearea: { type: "Area", value: "Montreal" },
+  //     benchmark: { type: "Benchmark", value: "Canada" },
+  //     variable: { type: "Variable", value: "test variable compare 2" },
+  //   },
+  // },
+  // {
+  //   reportName: "test compare report 2",
+  //   reportAssetDetails: {
+  //     tradearea: { type: "Area", value: "Alberta" },
+  //     benchmark: { type: "Benchmark", value: "Canada" },
+  //     variable: { type: "Variable", value: "test variable compare 2" },
+  //   },
+  // },
+];

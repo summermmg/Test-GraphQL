@@ -5,7 +5,7 @@ const { columns } = require("./columns.js");
 var { buildSchema } = require("graphql");
 const cors = require("cors");
 const app = express();
-const { filterList, getStackedColumns } = require("./utility");
+const { filterList, getStackedColumns, isColHidden } = require("./utility");
 
 app.use(cors());
 
@@ -120,9 +120,7 @@ const getColumns = ({ datamanager }) => {
     if (withStackedHeader) {
       result = getStackedColumns(result, hideColInfo, reportInputsInfo);
     } else {
-      result = result.filter(
-        (col) => !(col.isHidable && hideColInfo.includes(col.field))
-      );
+      result = result.filter((col) => !isColHidden(col, hideColInfo));
     }
   }
 

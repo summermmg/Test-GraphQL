@@ -94,14 +94,17 @@ const getHeaderTemplate = (reportInput) => {
   return content;
 };
 
+const isColHidden = (col, hideColInfo) =>
+  col.isHidable && hideColInfo.includes(col.field);
+
 const getSubColumns = (index, columns, hideColInfo) => {
   let result = [];
 
   if (index === 0) {
-    result = [...columns];
+    result = columns.filter((col) => !isColHidden(col, hideColInfo));
   } else if (index > 0) {
     columns.forEach((col) => {
-      if (col.isNumeric && !hideColInfo.includes(col.field)) {
+      if (col.isNumeric && !isColHidden(col, hideColInfo)) {
         result.push({
           ...col,
           field: `${col.field}${index}`,
@@ -130,4 +133,4 @@ const getStackedColumns = (columns, hideColInfo, reportInputsInfo) => {
   return result;
 };
 
-module.exports = { filterList, getStackedColumns };
+module.exports = { filterList, getStackedColumns, isColHidden };

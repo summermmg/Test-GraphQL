@@ -1,5 +1,6 @@
 import Table from "./components/Table";
 import FilterComponent from "./components/FilterComponent";
+import HideColumn from "./components/HideColumn";
 import "./index.css";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ import {
   GraphQLAdaptor,
   Predicate,
 } from "@syncfusion/ej2-data";
-import { columns, operatorList } from "./components/inputList";
+import { columns, reportInputsInfo } from "./components/inputList";
 import { getMyDataList, getMyColumns } from "./queries";
 
 const SERVICE_URI = "http://localhost:4000/graphql";
@@ -35,8 +36,10 @@ function App() {
   // datamanager contains sorting and paging info
   const [datamanager, setDatamanager] = useState({ pageIndex: 1, pageSize });
   const [tableData, setTableData] = useState([]);
+  const [tableColumns, setTableColumns] = useState([]);
   const [totalRecord, setTotalRecord] = useState(0);
   const [filterSettings, setFilterSettings] = useState(defaultFilterSettings);
+  const [hideColsInfo, setHideColsInfo] = useState(new Set());
 
   const generateFilterQuery = (query, settings) => {
     const { condition, filters } = settings;
@@ -130,37 +133,10 @@ function App() {
       });
   };
 
-  const reportInputsInfo = [
-    {
-      reportName: "test active report",
-      reportAssetDetails: {
-        tradearea: { type: "Area", value: "Ontario" },
-        benchmark: { type: "Benchmark", value: "Canada" },
-        variable: { type: "Variable", value: "test variable active" },
-      },
-    },
-    {
-      reportName: "test compare report 1",
-      reportAssetDetails: {
-        tradearea: { type: "Area", value: "Montreal" },
-        benchmark: { type: "Benchmark", value: "Canada" },
-        variable: { type: "Variable", value: "test variable compare 2" },
-      },
-    },
-    {
-      reportName: "test compare report 2",
-      reportAssetDetails: {
-        tradearea: { type: "Area", value: "Alberta" },
-        benchmark: { type: "Benchmark", value: "Canada" },
-        variable: { type: "Variable", value: "test variable compare 2" },
-      },
-    },
-  ];
-
   const fetchColumns = () => {
     const query = new Query()
       .addParams("reportType", "profileArea")
-      .addParams("hideColInfo", ["count"])
+      .addParams("hideColInfo", [...hideColsInfo])
       .addParams("withStackedHeader", true)
       .addParams("reportInputsInfo", reportInputsInfo);
 
@@ -175,13 +151,13 @@ function App() {
     })
       .executeQuery(query)
       .then((e) => {
-        console.log(e)
+        setTableColumns(e.result);
       });
   };
 
   useEffect(() => {
     fetchDataList(datamanager);
-    fetchColumns()
+    fetchColumns();
   }, []);
 
   const onFilterApply = (e) => {
@@ -219,6 +195,10 @@ function App() {
     setFilterSettings(newSettings);
   };
 
+  const onHideColApply = () => {
+    fetchColumns();
+  };
+
   const getContent = (type) => {
     let content;
 
@@ -237,6 +217,16 @@ function App() {
 
         break;
 
+      case "hideColumn":
+        content = (
+          <HideColumn
+            hideColsInfo={hideColsInfo}
+            setHideColsInfo={setHideColsInfo}
+            onHideColApply={onHideColApply}
+          />
+        );
+        break;
+
       default:
         content = <div>test</div>;
         break;
@@ -249,6 +239,7 @@ function App() {
     <div className="container">
       <Table
         tableData={tableData}
+        tableColumns={tableColumns}
         datamanager={datamanager}
         setDatamanager={setDatamanager}
         fetchDataList={fetchDataList}
