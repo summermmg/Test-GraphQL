@@ -1,64 +1,12 @@
-// TODO: get from columns query
+import { nanoid } from "nanoid";
+
 export const columns = [
-  {
-    field: "segmentCode",
-    headerText: "Code",
-    width: "20%",
-    textAlign: "Right",
-    id: 1,
-  },
-  {
-    field: "sg",
-    headerText: "SG",
-    width: "20%",
-    textAlign: "Right",
-    id: 1,
-  },
-  {
-    field: "lg",
-    headerText: "LG",
-    width: "20%",
-    textAlign: "Right",
-    id: 2,
-  },
-  {
-    field: "segmentName",
-    headerText: "Segment Name",
-    width: "20%",
-    textAlign: "Right",
-    id: 3,
-  },
-  {
-    field: "count",
-    headerText: "Count",
-    width: "20%",
-    textAlign: "Right",
-    isNumeric: true,
-    isHidable: true,
-    id: 4,
-    hasAccessor: true,
-    precision: 2,
-  },
-  {
-    field: "percentComp",
-    headerText: "Percent Comp",
-    width: "20%",
-    textAlign: "Right",
-    isNumeric: true,
-    isHidable: true,
-    id: 5,
-    hasAccessor: true,
-    precision: 2,
-  },
-  {
-    field: "index",
-    headerText: "Index",
-    width: "20%",
-    textAlign: "Right",
-    isNumeric: true,
-    isHidable: true,
-    id: 6,
-  },
+  "count",
+  "percentComp",
+  "baseCount",
+  "basePercent",
+  "percentPen",
+  "index",
 ];
 
 export const operatorList = [
@@ -95,3 +43,21 @@ export const reportInputsInfo = [
   //   },
   // },
 ];
+
+export const defaultFilterSettings = {
+  condition: "and",
+  filters: [
+    {
+      id: nanoid(),
+      field: "index",
+      operator: "greaterthanorequal",
+      value: "",
+    },
+  ],
+};
+
+export const reportInput = {
+  area: "test area",
+  benchmark: "test benchmark",
+  variables: ["variable1", "variable2", "variable3"],
+};

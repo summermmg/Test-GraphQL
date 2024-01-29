@@ -31,7 +31,7 @@ code {
 }
 
 .table {
-  width: 70%;
+  width: 80%;
   margin-top: 5rem;
 }
 
@@ -50,10 +50,10 @@ code {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
 
-  .e-switch-wrapper {
-    margin: 0 10px 0 0;
-  }
+.e-switch-wrapper {
+  margin: 0 10px 0 0;
 }
 
 .filter-buttons {

@@ -85,7 +85,7 @@ function getDataList({ datamanager }) {
 
     if (group) {
       if (group === "sg") {
-        console.log(group)
+        console.log(group);
         result.sort(
           (a, b) => DEFAULT_SG_ORDER_MAP[a.sg] - DEFAULT_SG_ORDER_MAP[b.sg]
         );
@@ -114,10 +114,23 @@ function getDataList({ datamanager }) {
   // perform sorting
   if (datamanager.sorted) {
     const condition = datamanager.sorted[0];
+    const isString = typeof result[0][condition.name] === "string";
     if (condition.direction === "ascending") {
-      result.sort((a, b) => a[condition.name] - b[condition.name]);
+      if (isString) {
+        result.sort((a, b) =>
+          a[condition.name].localeCompare(b[condition.name])
+        );
+      } else {
+        result.sort((a, b) => a[condition.name] - b[condition.name]);
+      }
     } else {
-      result.sort((a, b) => b[condition.name] - a[condition.name]);
+      if (isString) {
+        result.sort((a, b) =>
+          b[condition.name].localeCompare(a[condition.name])
+        );
+      } else {
+        result.sort((a, b) => b[condition.name] - a[condition.name]);
+      }
     }
   }
 

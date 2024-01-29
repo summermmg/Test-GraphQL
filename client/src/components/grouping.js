@@ -1,7 +1,7 @@
 import { RadioButtonComponent } from "@syncfusion/ej2-react-buttons";
 
 const Grouping = (props) => {
-  const { groupOptions, setGroupOptions } = props;
+  const { groupOptions, setGroupOptions, fetchDataList } = props;
 
   const onChange = (e) => {
     e.preventDefault();
@@ -10,6 +10,8 @@ const Grouping = (props) => {
     if (value) {
       const temp = { ...groupOptions };
       temp.columns = value === "none" ? [] : [value];
+
+      fetchDataList(undefined, temp);
       setGroupOptions(temp);
     }
   };

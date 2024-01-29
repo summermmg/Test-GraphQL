@@ -10,9 +10,9 @@ const HideColumn = (props) => {
   const {
     hideColsInfo,
     setHideColsInfo,
-    onHideColApply,
     withStackedHeader,
     setStackedHeader,
+    fetchColumns
   } = props;
 
   const onClick = (e) => {
@@ -33,17 +33,20 @@ const HideColumn = (props) => {
     setStackedHeader(e?.checked || false);
   };
 
+  const onHideColApply = () => {
+    fetchColumns();
+  };
+
   return (
     <div className="hide-column">
       <div className="check-box-list">
         {columns
-          .filter((col) => col.isHidable)
-          .map((col) => (
+          .map((colName) => (
             <CheckBoxComponent
               key={nanoid()}
-              label={col.field}
-              checked={hideColsInfo.has(col.field)}
-              value={col.field}
+              label={colName}
+              checked={hideColsInfo.has(colName)}
+              value={colName}
               onClick={onClick}
             />
           ))}

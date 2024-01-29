@@ -1,4 +1,3 @@
-// TODO: Move the calculation logic to BE
 const calcIndex = (items, numeratorField, denominatorField) => {
   let result = { denominatorTotal: 0, numeratorTotal: 0 };
   let total = 0;
@@ -96,6 +95,17 @@ export const calculateTotal = (args, field) => {
   return total;
 };
 
+export const formatValue = (value, precision = 2) => {
+  if (!value) return 0;
+
+  const formattedValue = value.toLocaleString('en-US', {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
+  return formattedValue;
+};
+
 export const formatAggregateValue = (args, colField) => {
   let result = 0;
   if (colField === "segmentName") {
@@ -103,19 +113,19 @@ export const formatAggregateValue = (args, colField) => {
   }
 
   if (colField === "count" || colField === "baseCount") {
-    result = args.Custom;
+    result = formatValue(args.Custom, 0);
   }
 
   if (colField === "percentComp" || colField === "basePercent") {
-    result = args.Sum;
+    result = formatValue(args.Sum);
   }
 
   if (colField === "percentPen") {
-    result = args.Custom;
+    result = formatValue(args.Custom);
   }
 
   if (colField === "index") {
-    result = args.Custom;
+    result = formatValue(parseFloat(args.Custom), 0);
   }
 
   return result;

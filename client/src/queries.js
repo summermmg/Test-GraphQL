@@ -1,9 +1,16 @@
-const getMyDataList = (
-  columns
-) => `query getDataList($datamanager:Datamanager) {
+const getMyDataList = () => `query getDataList($datamanager:Datamanager) {
   myDataList(datamanager: $datamanager) {
     totalRecord, result{
-      ${columns.reduce((acc, curr) => `${acc}, ${curr.field}`, "")}
+      segmentCode
+      sg
+      lg
+      segmentName
+      count
+      percentComp
+      baseCount
+      basePercent
+      percentPen
+      index
     }
   }}`;
 
@@ -29,7 +36,7 @@ const getMyColumns = () => `query getColumns($datamanager:Datamanager) {
         isHidable
         hasAccessor
         precision
-      }      
+      }
     }}`;
 
-export { getMyDataList,getMyColumns };
+export { getMyDataList, getMyColumns };

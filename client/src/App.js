@@ -1,7 +1,7 @@
 import Table from "./components/Table";
 import FilterComponent from "./components/FilterComponent";
 import HideColumn from "./components/HideColumn";
-import Grouping from "./components/grouping";
+import Grouping from "./components/Grouping";
 import "./index.css";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -16,22 +16,15 @@ import {
   GraphQLAdaptor,
   Predicate,
 } from "@syncfusion/ej2-data";
-import { columns, reportInputsInfo } from "./components/inputList";
+import {
+  reportInputsInfo,
+  defaultFilterSettings,
+  reportInput,
+} from "./components/inputList";
 import { getMyDataList, getMyColumns } from "./queries";
 
 const SERVICE_URI = "http://localhost:4000/graphql";
 const pageSize = 10;
-const defaultFilterSettings = {
-  condition: "and",
-  filters: [
-    {
-      id: nanoid(),
-      field: "index",
-      operator: "greaterthanorequal",
-      value: "",
-    },
-  ],
-};
 
 function App() {
   const renderCaptionTemplate = (groupItems) => {
@@ -94,11 +87,11 @@ function App() {
     }
   };
 
-  const formatQuery = (newDatamanager) => {
+  const formatQuery = (newDatamanager, newGroupOptions) => {
     let query = new Query();
     const { sorted, pageIndex, pageSize } = newDatamanager;
 
-    // append sort query
+    // append sorting query
     if (sorted && sorted.length > 0) {
       query = query.sortBy(sorted[0].name, sorted[0].direction);
     }
@@ -112,31 +105,29 @@ function App() {
     }
 
     // append additional params
-    const reportInput = {
-      area: "test area",
-      benchmark: "test benchmark",
-      variables: ["variable1", "variable2", "variable3"],
-    };
     query = query.addParams("reportInput", reportInput);
 
-    if (groupOptions.columns.length > 0) {
-      query = query.addParams("group", groupOptions.columns[0]);
+    if (newGroupOptions.columns.length > 0) {
+      query = query.addParams("group", newGroupOptions.columns[0]);
     }
 
     return query;
   };
 
-  const fetchDataList = (newDatamanager) => {
-    const query = formatQuery(newDatamanager);
+  const fetchDataList = (
+    newDatamanager = datamanager,
+    newGroupOptions = groupOptions
+  ) => {
+    const query = formatQuery(newDatamanager, newGroupOptions);
 
     new DataManager({
       url: SERVICE_URI,
       adaptor: new GraphQLAdaptor({
         response: {
           result: "myDataList.result", // map the response
-          count: "myDataList.totalRecord", // map the response
+          count: "myDataList.totalRecord",
         },
-        query: getMyDataList(columns),
+        query: getMyDataList(),
       }),
     })
       .executeQuery(query)
@@ -169,52 +160,9 @@ function App() {
   };
 
   useEffect(() => {
-    fetchDataList(datamanager);
+    fetchDataList();
     fetchColumns();
   }, []);
-
-  useEffect(() => {
-    fetchDataList(datamanager);
-  }, [groupOptions]);
-
-  const onFilterApply = (e) => {
-    e.preventDefault();
-
-    fetchDataList(datamanager);
-  };
-
-  const onAddNewFilter = () => {
-    const newFilters = [...filterSettings.filters];
-
-    newFilters.push({
-      id: nanoid(),
-      field: "index",
-      operator: "greaterthanorequal",
-      value: "",
-    });
-
-    setFilterSettings({
-      ...filterSettings,
-      filters: newFilters,
-    });
-  };
-
-  const onFilterReset = () => {
-    setFilterSettings(defaultFilterSettings);
-  };
-
-  const onConditionChange = (e) => {
-    const newSettings = {
-      ...filterSettings,
-      condition: e.checked ? "and" : "or",
-    };
-
-    setFilterSettings(newSettings);
-  };
-
-  const onHideColApply = () => {
-    fetchColumns();
-  };
 
   const getContent = (type) => {
     let content;
@@ -225,10 +173,7 @@ function App() {
           <FilterComponent
             filterSettings={filterSettings}
             setFilterSettings={setFilterSettings}
-            onFilterApply={onFilterApply}
-            onAddNewFilter={onAddNewFilter}
-            onFilterReset={onFilterReset}
-            onConditionChange={onConditionChange}
+            fetchDataList={fetchDataList}
           />
         );
 
@@ -239,9 +184,9 @@ function App() {
           <HideColumn
             hideColsInfo={hideColsInfo}
             setHideColsInfo={setHideColsInfo}
-            onHideColApply={onHideColApply}
             withStackedHeader={withStackedHeader}
             setStackedHeader={setStackedHeader}
+            fetchColumns={fetchColumns}
           />
         );
         break;
@@ -251,6 +196,7 @@ function App() {
           <Grouping
             groupOptions={groupOptions}
             setGroupOptions={setGroupOptions}
+            fetchDataList={fetchDataList}
           />
         );
         break;

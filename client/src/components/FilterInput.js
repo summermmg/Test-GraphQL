@@ -53,9 +53,7 @@ const FilterInput = ({
     <div className="filter-input">
       <DropDownListComponent
         id="field-select"
-        dataSource={columns
-          .filter((col) => col.isNumeric)
-          .map((col) => col.field)}
+        dataSource={columns}
         change={onFieldChange}
         value={filter.field}
       />

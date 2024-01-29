@@ -1,17 +1,48 @@
 import { nanoid } from "nanoid";
-import { SwitchComponent, ButtonComponent } from "@syncfusion/ej2-react-buttons";
+import {
+  SwitchComponent,
+  ButtonComponent,
+} from "@syncfusion/ej2-react-buttons";
 import FilterInput from "./FilterInput";
-import { columns, operatorList } from "./inputList";
+import { columns, operatorList, defaultFilterSettings } from "./inputList";
 
 const FilterComponent = (props) => {
-  const {
-    filterSettings,
-    setFilterSettings,
-    onFilterApply,
-    onAddNewFilter,
-    onFilterReset,
-    onConditionChange,
-  } = props;
+  const { filterSettings, setFilterSettings, fetchDataList } = props;
+
+  const onFilterApply = (e) => {
+    e.preventDefault();
+
+    fetchDataList();
+  };
+
+  const onAddNewFilter = () => {
+    const newFilters = [...filterSettings.filters];
+
+    newFilters.push({
+      id: nanoid(),
+      field: "index",
+      operator: "greaterthanorequal",
+      value: "",
+    });
+
+    setFilterSettings({
+      ...filterSettings,
+      filters: newFilters,
+    });
+  };
+
+  const onFilterReset = () => {
+    setFilterSettings(defaultFilterSettings);
+  };
+
+  const onConditionChange = (e) => {
+    const newSettings = {
+      ...filterSettings,
+      condition: e.checked ? "and" : "or",
+    };
+
+    setFilterSettings(newSettings);
+  };
 
   return (
     <div className="filter-component">
@@ -37,9 +68,15 @@ const FilterComponent = (props) => {
           <span>{filterSettings.condition}</span>
         </div>
 
-        <ButtonComponent className="filter-button" onClick={onAddNewFilter}>Add new filter</ButtonComponent>
-        <ButtonComponent className="filter-button" onClick={onFilterApply}>Apply</ButtonComponent>
-        <ButtonComponent className="filter-button" onClick={onFilterReset}>Reset</ButtonComponent>
+        <ButtonComponent className="filter-button" onClick={onAddNewFilter}>
+          Add new filter
+        </ButtonComponent>
+        <ButtonComponent className="filter-button" onClick={onFilterApply}>
+          Apply
+        </ButtonComponent>
+        <ButtonComponent className="filter-button" onClick={onFilterReset}>
+          Reset
+        </ButtonComponent>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import {
   PagerComponent,
   Group,
   Aggregate,
+  Resize,
 } from "@syncfusion/ej2-react-grids";
 import { nanoid } from "nanoid";
 import { useEffect, useRef } from "react";
@@ -37,29 +38,29 @@ function Table(props) {
   }, [tableColumns, groupOptions]);
 
   useEffect(() => {
-    if (tableData && tableColumns) {
+    if (tableColumns) {
       setAggregate(getAggregates(tableColumns));
     }
-  }, [tableData, tableColumns]);
+  }, [tableColumns]);
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
-    const temp = { ...datamanager };
+    const result = { ...datamanager };
 
     if (requestType === "sorting") {
       if (args.name && args.direction) {
-        temp.sorted = [{ name: args.name, direction: args.direction }];
+        result.sorted = [{ name: args.name, direction: args.direction }];
       } else {
-        temp.sorted = [];
+        result.sorted = [];
       }
     }
 
     if (requestType === "paging") {
-      temp.pageIndex = args.pageIndex;
-      temp.pageSize = args.pageSize;
+      result.pageIndex = args.pageIndex;
+      result.pageSize = args.pageSize;
     }
 
-    return temp;
+    return result;
   };
 
   const onActionBegin = (args) => {
@@ -84,6 +85,14 @@ function Table(props) {
     setDatamanager(newDatamanager);
   };
 
+  const getValueAccessor = (column) => (field, value) =>
+    column.hasAccessor
+      ? Number(value[field]).toLocaleString("en-US", {
+          minimumFractionDigits: column.precision,
+          maximumFractionDigits: column.precision,
+        })
+      : value[field];
+
   return (
     <div className="table">
       {tableColumns && tableData && (
@@ -91,6 +100,7 @@ function Table(props) {
           dataSource={tableData}
           allowSorting={true}
           allowGrouping={true}
+          allowResizing
           groupSettings={groupOptions}
           actionBegin={onActionBegin}
           ref={grid}
@@ -106,20 +116,15 @@ function Table(props) {
                 headerText={col.headerText || ""}
                 headerTemplate={col.headerTemplate}
                 sortComparer={sortComparer}
-                columns={col.columns}
-                valueAccessor={
-                  col.hasAccessor
-                    ? (field, value) =>
-                        Number(value[field]).toLocaleString("en-US", {
-                          minimumFractionDigits: col.precision,
-                          maximumFractionDigits: col.precision,
-                        })
-                    : null
-                }
+                columns={col?.columns?.map((c) => ({
+                  ...c,
+                  valueAccessor: getValueAccessor(c),
+                }))}
+                valueAccessor={getValueAccessor(col)}
               />
             ))}
           </ColumnsDirective>
-          <Inject services={[Sort, Group, Aggregate]} />
+          <Inject services={[Sort, Group, Aggregate, Resize]} />
         </GridComponent>
       )}
 
