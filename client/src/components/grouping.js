@@ -4,6 +4,7 @@ const Grouping = (props) => {
   const { groupOptions, setGroupOptions } = props;
 
   const onChange = (e) => {
+    e.preventDefault();
     const value = e?.target?.value;
 
     if (value) {

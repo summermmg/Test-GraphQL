@@ -89,7 +89,7 @@ function getDataList({ datamanager }) {
         result.sort(
           (a, b) => DEFAULT_SG_ORDER_MAP[a.sg] - DEFAULT_SG_ORDER_MAP[b.sg]
         );
-      } else if (datamanager.group === "lg") {
+      } else if (group === "lg") {
         result.sort(
           (a, b) => DEFAULT_LG_ORDER_MAP[a.lg] - DEFAULT_LG_ORDER_MAP[b.lg]
         );

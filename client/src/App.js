@@ -118,8 +118,10 @@ function App() {
       variables: ["variable1", "variable2", "variable3"],
     };
     query = query.addParams("reportInput", reportInput);
-    // TODO: add group info to datamanager and dynamically add group query
-    query = query.addParams("group", "sg");
+
+    if (groupOptions.columns.length > 0) {
+      query = query.addParams("group", groupOptions.columns[0]);
+    }
 
     return query;
   };
@@ -170,6 +172,10 @@ function App() {
     fetchDataList(datamanager);
     fetchColumns();
   }, []);
+
+  useEffect(() => {
+    fetchDataList(datamanager);
+  }, [groupOptions]);
 
   const onFilterApply = (e) => {
     e.preventDefault();
