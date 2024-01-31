@@ -11,6 +11,8 @@ const {
   isColHidden,
   DEFAULT_LG_ORDER_MAP,
   DEFAULT_SG_ORDER_MAP,
+  formatAggregate,
+  sortList,
 } = require("./utility");
 
 app.use(cors());
@@ -44,7 +46,7 @@ const schema = buildSchema(`
       baseCount: Float
       basePercent: Float
       percentPen: Float
-      index: Int
+      index: Float
     }
 
     type MyColumn {
@@ -76,11 +78,13 @@ const schema = buildSchema(`
 function getDataList({ datamanager }) {
   let result = [...data];
   let totalRecord = result.length;
+  let group;
 
   if (datamanager.params) {
     // fetch data by report input
     const params = JSON.parse(datamanager.params);
-    const { reportInput, group } = params;
+    // const { reportInput, group } = params;
+    group = params.group
     // console.log("reportInput", reportInput);
 
     if (group) {
@@ -94,11 +98,14 @@ function getDataList({ datamanager }) {
           (a, b) => DEFAULT_LG_ORDER_MAP[a.lg] - DEFAULT_LG_ORDER_MAP[b.lg]
         );
       }
+
+      // Add extra grouping rows
+      result = formatAggregate(result, group, columns, datamanager)
     }
   }
 
   // perform filtering
-  if (datamanager.where) {
+  if (datamanager.where && !group) {
     result = filterList(result, JSON.parse(datamanager.where));
     totalRecord = result.length;
   }
@@ -112,26 +119,8 @@ function getDataList({ datamanager }) {
   }
 
   // perform sorting
-  if (datamanager.sorted) {
-    const condition = datamanager.sorted[0];
-    const isString = typeof result[0][condition.name] === "string";
-    if (condition.direction === "ascending") {
-      if (isString) {
-        result.sort((a, b) =>
-          a[condition.name].localeCompare(b[condition.name])
-        );
-      } else {
-        result.sort((a, b) => a[condition.name] - b[condition.name]);
-      }
-    } else {
-      if (isString) {
-        result.sort((a, b) =>
-          b[condition.name].localeCompare(a[condition.name])
-        );
-      } else {
-        result.sort((a, b) => b[condition.name] - a[condition.name]);
-      }
-    }
+  if (datamanager.sorted && !group) {
+    result = sortList(datamanager, result)
   }
 
   return { result, totalRecord };

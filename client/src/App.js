@@ -40,7 +40,7 @@ function App() {
     showGroupedColumn: true,
     showDropArea: false,
     allowReordering: true,
-    columns: [],
+    columns: ['sg'],
     captionTemplate: renderCaptionTemplate,
   };
 
@@ -53,7 +53,6 @@ function App() {
   const [hideColsInfo, setHideColsInfo] = useState(new Set());
   const [withStackedHeader, setStackedHeader] = useState(false);
   const [groupOptions, setGroupOptions] = useState(defaultGroupSettings);
-  const [aggregate, setAggregate] = useState();
 
   const generateFilterQuery = (query, settings) => {
     const { condition, filters } = settings;
@@ -215,8 +214,6 @@ function App() {
         fetchDataList={fetchDataList}
         totalRecord={totalRecord}
         groupOptions={groupOptions}
-        aggregate={aggregate}
-        setAggregate={setAggregate}
       />
       <TabComponent>
         <TabItemsDirective>

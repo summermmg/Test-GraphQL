@@ -90,6 +90,8 @@ const columns = [
       isNumeric: true,
       isHidable: true,
       id: 10,
+      hasAccessor: true,
+      precision: 0,
     },
   ];
 
