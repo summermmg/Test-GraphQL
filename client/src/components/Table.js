@@ -31,7 +31,7 @@ function Table(props) {
     if (grid?.current) {
       grid.current.refreshColumns();
     }
-  }, [tableColumns, groupOptions, tableData, datamanager]);
+  });
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
@@ -69,9 +69,9 @@ function Table(props) {
 
   const queryCellInfo = (args) => {
     if (!args.data.segmentCode) {
-      args.cell.classList.add('subtotal-cell');
+      args.cell.classList.add("subtotal-cell");
     }
-  }
+  };
 
   const onPagingClick = (args) => {
     const newDatamanager = getDatamanager("paging", {
