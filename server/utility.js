@@ -1,3 +1,4 @@
+// Filter utility
 const checkIsFilterMatch = (data, filter) => {
   let { field, operator, value } = filter;
   value = Number(value);
@@ -69,6 +70,8 @@ const filterList = (list, where) => {
   return result;
 };
 
+// Format columns utility
+
 const getHeaderTemplate = (reportInput) => {
   const { reportAssetDetails } = reportInput;
   const tradeAreaTxt = reportAssetDetails?.tradearea?.value;
@@ -125,6 +128,7 @@ const getStackedColumns = (columns, hideColInfo, reportInputsInfo) => {
       field: `stackedHeader-${index}`,
       headerTemplate: getHeaderTemplate(reportInput),
       columns: getSubColumns(index, columns, hideColInfo),
+      id: "1234",
     };
 
     result.push(obj);
@@ -132,6 +136,8 @@ const getStackedColumns = (columns, hideColInfo, reportInputsInfo) => {
 
   return result;
 };
+
+// Sort utility
 
 const DEFAULT_SG_ORDER = [
   "U1",
@@ -314,7 +320,8 @@ const getAggregateCell = (col, recordList) => {
 };
 
 // generate aggregate data rows based on columns, group records list,
-const appendAggregateRow = (recordList, columns, field, datamanager) => {
+const appendAggregateRow = (args) => {
+  const { recordList, columns, field, datamanager } = args;
   let result;
 
   if (datamanager.sorted) {
@@ -355,12 +362,15 @@ const groupListByField = (dataList, field) => {
 };
 
 // data list and group field. eg: sg or lg
-const formatAggregate = (dataList, field, columns, datamanager) => {
+const formatAggregate = (args) => {
+  const { dataList, field, columns, datamanager } = args;
   const groupedList = groupListByField(dataList, field);
   let result = [];
 
   Object.values(groupedList).forEach((recordList) => {
-    result.push(...appendAggregateRow(recordList, columns, field, datamanager));
+    result.push(
+      ...appendAggregateRow({ recordList, columns, field, datamanager })
+    );
   });
 
   return result;

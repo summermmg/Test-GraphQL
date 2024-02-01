@@ -29,9 +29,9 @@ function Table(props) {
 
   useEffect(() => {
     if (grid?.current) {
-      grid.current.componentRefresh();
+      grid.current.refreshColumns();
     }
-  }, [tableColumns, groupOptions]);
+  }, [tableColumns, groupOptions, tableData, datamanager]);
 
   // get updated datamanager
   const getDatamanager = (requestType, args) => {
@@ -62,6 +62,8 @@ function Table(props) {
 
       fetchDataList(newDatamanager);
       setDatamanager(newDatamanager);
+
+      grid.current.refreshColumns();
     }
   };
 
@@ -115,6 +117,7 @@ function Table(props) {
                 columns={col?.columns?.map((c) => ({
                   ...c,
                   valueAccessor: getValueAccessor(c),
+                  sortComparer: () => 0,
                 }))}
                 valueAccessor={getValueAccessor(col)}
               />

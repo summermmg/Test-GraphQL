@@ -84,7 +84,7 @@ function getDataList({ datamanager }) {
     // fetch data by report input
     const params = JSON.parse(datamanager.params);
     // const { reportInput, group } = params;
-    group = params.group
+    group = params.group;
     // console.log("reportInput", reportInput);
 
     if (group) {
@@ -99,7 +99,12 @@ function getDataList({ datamanager }) {
       }
 
       // Add extra grouping rows
-      result = formatAggregate(result, group, columns, datamanager)
+      result = formatAggregate({
+        dataList: result,
+        field: group,
+        columns,
+        datamanager,
+      });
     }
   }
 
@@ -119,7 +124,7 @@ function getDataList({ datamanager }) {
 
   // perform sorting
   if (datamanager.sorted && !group) {
-    result = sortList(datamanager, result)
+    result = sortList(datamanager, result);
   }
 
   return { result, totalRecord };
