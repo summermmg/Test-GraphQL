@@ -40,7 +40,7 @@ function App() {
     showGroupedColumn: true,
     showDropArea: false,
     allowReordering: true,
-    columns: ['sg'],
+    columns: [],
     captionTemplate: renderCaptionTemplate,
   };
 

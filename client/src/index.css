@@ -102,6 +102,10 @@ code {
   }
 }
 
+.subtotal-cell {
+  background-color: #eeee;
+}
+
 .grouping {
   display: flex;
   flex-direction: column;

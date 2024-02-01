@@ -89,7 +89,6 @@ function getDataList({ datamanager }) {
 
     if (group) {
       if (group === "sg") {
-        console.log(group);
         result.sort(
           (a, b) => DEFAULT_SG_ORDER_MAP[a.sg] - DEFAULT_SG_ORDER_MAP[b.sg]
         );

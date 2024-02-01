@@ -65,6 +65,12 @@ function Table(props) {
     }
   };
 
+  const queryCellInfo = (args) => {
+    if (!args.data.segmentCode) {
+      args.cell.classList.add('subtotal-cell');
+    }
+  }
+
   const onPagingClick = (args) => {
     const newDatamanager = getDatamanager("paging", {
       pageIndex: args.currentPage,
@@ -94,6 +100,7 @@ function Table(props) {
           groupSettings={groupOptions}
           actionBegin={onActionBegin}
           ref={grid}
+          queryCellInfo={queryCellInfo}
         >
           <ColumnsDirective>
             {tableColumns.map((col) => (

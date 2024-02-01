@@ -176,30 +176,26 @@ const DEFAULT_LG_ORDER_MAP = DEFAULT_LG_ORDER.reduce(
 );
 
 const sortList = (datamanager, list) => {
-  let result = [...list]  
+  let result = [...list];
   const condition = datamanager.sorted[0];
   const isString = typeof result[0][condition.name] === "string";
 
   if (condition.direction === "ascending") {
     if (isString) {
-      result.sort((a, b) =>
-        a[condition.name].localeCompare(b[condition.name])
-      );
+      result.sort((a, b) => a[condition.name].localeCompare(b[condition.name]));
     } else {
       result.sort((a, b) => a[condition.name] - b[condition.name]);
     }
   } else {
     if (isString) {
-      result.sort((a, b) =>
-        b[condition.name].localeCompare(a[condition.name])
-      );
+      result.sort((a, b) => b[condition.name].localeCompare(a[condition.name]));
     } else {
       result.sort((a, b) => b[condition.name] - a[condition.name]);
     }
   }
 
-  return result
-}
+  return result;
+};
 
 // Aggregate utility
 
@@ -322,7 +318,7 @@ const appendAggregateRow = (recordList, columns, field, datamanager) => {
   let result;
 
   if (datamanager.sorted) {
-    result = sortList(datamanager, recordList)
+    result = sortList(datamanager, recordList);
   } else {
     result = [...recordList];
   }
